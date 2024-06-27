@@ -2,7 +2,8 @@
 
 ## require
 
--`curl` -`jansson`
+- `curl`
+- `jansson`
 
 ## install paket
 
