@@ -9,29 +9,29 @@
 #define URL "https://api.simsimi.vn/v1/simtalk"
 #define LC "id"
 
-struct response_data {
+struct responseData {
     char *data;
     size_t size;
 };
 
-size_t write_callback(void *ptr, size_t size, size_t nmemb, struct response_data *data) {
+size_t fCallback(void *ptr, size_t size, size_t nmemb, struct responseData *data) {
     size_t total_size = size * nmemb;
-    char *ptr_realloc = realloc(data->data, data->size + total_size + 1);
-    if(ptr_realloc == NULL) {
+    char *ptrRealloc = realloc(data->data, data->size + total_size + 1);
+    if(ptrRealloc == NULL) {
         fprintf(stderr, "memory error!!1!1!...\n");
         return 0;
     }
-    data->data = ptr_realloc;
+    data->data = ptrRealloc;
     memcpy(&(data->data[data->size]), ptr, total_size);
     data->size += total_size;
     data->data[data->size] = '\0';
     return total_size;
 }
 
-char *send_request(const char *text) {
+char *sendRequest(const char *text) {
     CURL *curl;
     CURLcode res;
-    struct response_data response = {0};
+    struct responseData response = {0};
 
     curl = curl_easy_init();
     if(curl) {
@@ -40,7 +40,7 @@ char *send_request(const char *text) {
 
         curl_easy_setopt(curl, CURLOPT_URL, URL);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_fields);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, curl_slist_append(NULL, "Content-Type: application/x-www-form-urlencoded"));
 
@@ -58,10 +58,10 @@ char *send_request(const char *text) {
     return response.data;
 }
 
-char *parse_response(const char *response_data) {
+char *parseResponse(const char *responseData) {
     json_t *root;
     json_error_t error;
-    root = json_loads(response_data, 0, &error);
+    root = json_loads(responseData, 0, &error);
     if(!root) {
         fprintf(stderr, "error: on line %d: %s\n", error.line, error.text);
         return NULL;
@@ -92,19 +92,19 @@ int main() {
 
         input_text[strcspn(input_text, "\n")] = '\0';
 
-        if(strcmp(input_text, "exit") == 0 || strcmp(input_text, "quit") == 0 || strcmp(input_text, "keluar") == 0) {
-            printf("quit bye dahh...\n");
+        if(strcmp(input_text, "exit") == 0 || strcmp(input_text, "quit") == 0 || strcmp(input_text, "keluar") == 0 || strcmp(input_text, "murtad") == 0) {
+            printf("yahh logout dahh...\n");
             break;
         }
 
-        char *response_data = send_request(input_text);
-        if(response_data) {
-            char *message = parse_response(response_data);
+        char *responseData = sendRequest(input_text);
+        if(responseData) {
+            char *message = parseResponse(responseData);
             if(message) {
                 printf("bot>: %s\n", message);
                 free(message);
             }
-            free(response_data);
+            free(responseData);
         } else {
             printf("error failed get response...\n");
         }
