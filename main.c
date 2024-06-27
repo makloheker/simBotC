@@ -1,3 +1,5 @@
+// C nih boss.. bahasa para leluhur
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,18 +9,16 @@
 #define URL "https://api.simsimi.vn/v1/simtalk"
 #define LC "id"
 
-// Struktur untuk menyimpan data response
 struct response_data {
     char *data;
     size_t size;
 };
 
-// Callback untuk menyimpan data response
 size_t write_callback(void *ptr, size_t size, size_t nmemb, struct response_data *data) {
     size_t total_size = size * nmemb;
     char *ptr_realloc = realloc(data->data, data->size + total_size + 1);
     if(ptr_realloc == NULL) {
-        fprintf(stderr, "Failed to allocate memory\n");
+        fprintf(stderr, "memory error!!1!1!...\n");
         return 0;
     }
     data->data = ptr_realloc;
@@ -28,7 +28,6 @@ size_t write_callback(void *ptr, size_t size, size_t nmemb, struct response_data
     return total_size;
 }
 
-// Fungsi untuk mengirim permintaan POST dan mendapatkan respons
 char *send_request(const char *text) {
     CURL *curl;
     CURLcode res;
@@ -59,7 +58,6 @@ char *send_request(const char *text) {
     return response.data;
 }
 
-// Fungsi untuk memproses respons JSON dan mengambil pesan
 char *parse_response(const char *response_data) {
     json_t *root;
     json_error_t error;
@@ -92,11 +90,10 @@ int main() {
             break;
         }
 
-        // Remove newline character
         input_text[strcspn(input_text, "\n")] = '\0';
 
         if(strcmp(input_text, "exit") == 0 || strcmp(input_text, "quit") == 0 || strcmp(input_text, "keluar") == 0) {
-            printf("Mengakhiri percakapan...\n");
+            printf("quit bye dahh...\n");
             break;
         }
 
@@ -109,7 +106,7 @@ int main() {
             }
             free(response_data);
         } else {
-            printf("Error: Failed to get response\n");
+            printf("error failed get response...\n");
         }
     }
 
